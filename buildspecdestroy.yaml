@@ -1,0 +1,26 @@
+version: 0.2
+#
+phases:
+  install:
+    runtime-versions:
+      python: 3.7
+    commands:
+      - tf_version=$TERRAFORM_VERSION
+      - wget https://releases.hashicorp.com/terraform/"$TERRAFORM_VERSION"/terraform_"$TERRAFORM_VERSION"_linux_amd64.zip
+      - unzip terraform_"$TERRAFORM_VERSION"_linux_amd64.zip
+      - mv terraform /usr/local/bin/
+
+      
+  build:
+    commands:
+      - terraform --version
+      - terraform init 
+      - terraform destroy --auto-approve
+
+  # post_build:
+  #    commands:
+  #      - aws s3 rm s3://"$S3_KEYS_COPY"/ --recursive
+  #      - aws s3 rm s3://terraform-cicd/ --recursive
+  #      - aws s3 rm s3://terraform-cicd-artifacts/ --recursive
+  #      - aws s3 rm s3://terraform-cicd-state-file/ --recursive
+  #      - aws dynamodb delete-table --table-name terraform-cicd-state
